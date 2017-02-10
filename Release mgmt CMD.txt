@@ -1,0 +1,68 @@
+Microsoft.TeamFoundation.Release.Build starting process...
+Release Management Server Release Tool - Version 14.0.23102.0
+Provides options to trigger releases with possible integration with TFS build.
+
+Mandatory arguments not specified. Review the help and ensure all mandatory arguments are specified.
+Help:
+release  Triggers a release using the provided information.
+
+ReleaseManagementBuild release {[-tfs teamFoundationServerUrl -tp teamProjectName -bd buildDefinitionName -bn buildNumber] | [-rt ReleaseTemplateName -pl PackageLocation [-an AppendComponentName] [-ff FireAndForget]]} [-ts TargetStage]
+
+Where:
+  -tfs     [TFS Mode] URL to the Team Foundation Server. The URL should include
+           the collection if other than default.
+  -tp      [TFS Mode] Name of the Team Project  for which the build was
+           triggered.
+  -bd      [TFS Mode] Name of the Build Definition used for the build.
+  -bn      [TFS Mode] Build Number representing the specific build instance
+           that generated the application components to release.
+  -rt      [Package Location Mode] Name of the release template used to create 
+           a new release.
+  -pl      [Package Location Mode] Package location of the components
+  -ts      [Optional] Name of the Target Stage where the release
+           should stop.
+  -ff      [Package Location Mode] [Optional] When set to True the command will 
+           return without waiting for the deployment in the first stage. Default 
+           is False: wait for the result.
+  -an      [Package Location Mode] [Optional] In case where the Release 
+           Template has component that 'Builds Externally', when set to true, 
+           the component name will be appended at the end of the Package Location.
+
+Examples:
+
+ReleaseManagementBuild release -tfs http://localhost:8080/tfs/DefaultCollection -tp "My Project" -bd "QA_Dev_MyApp_Manual" -bn "QA_Dev_MyApp_Manual_20101119.8"
+ReleaseManagementBuild release -tfs http://localhost:8080/tfs/DefaultCollection -tp "My Project" -bd "QA_Dev_MyApp_Manual" -bn "QA_Dev_MyApp_Manual_20101119.8" -ts "DEV"
+ReleaseManagementBuild release -rt "My Release Template" -pl "//share/drop/version"
+ReleaseManagementBuild release -rt "My Release Template" -pl "//share/drop/version" -ts "DEV" -ff False -an True
+    
+
+C:\Program Files (x86)\Microsoft Visual Studio 14.0\Release Management\Client\bin\ReleaseManagementBuild.exe  
+release -tfs http://tfs.ahtoit.net:8080/tfs/RevenueCycleColl -tp "RevenueCycle" -bd "DB-RM-Tran-R2016.2" -rt "vNext DB Tran CI"
+
+ReleaseManagementBuild release -rt "vNext-DB-Tran-CI" -pl "\\ahvtfsdv01rmt01\Drop\DB-RM-Tran-R2016.2\DB-RM-Tran-R2016.2_20160209.1"
+ReleaseManagementBuild release -rt "RCMWEBReleasePOC" -pl "\\ahv-tfsapp01\TFS_Drop\A2A\RM_R2016.2_Test\Web.039" -ts 
+release -tfs "http://tfs.ahtoit.net:8080/tfs/RevenueCycleColl" -tp "RevenueCycle" -bd "DB-RM-Tran-R2016.2" -bn "DB-RM-Tran-R2016.2_20160218.1" -ts "RCM-INT"
+
+
+String.Format("-tfs ""{0}"" -tp ""{1}"" -bd ""{2}"" -bn ""{3}"" -ts ""{4}"" -nologo", ReleaseBuildTpc.Uri, BuildDetail.TeamProject, BuildDetail.BuildDefinition.Name, BuildDetail.BuildNumber, ReleaseTargetStage)
+String.Format("-rt ""{0}"" -pl ""{1}"" -nologo", "RCMWEBReleasePOC", BuildDetail.DropLocation)
+String.Format("-rt ""{0}"" -pl ""{1}"" -ts ""{2}"" -nologo", ReleaseTemplateName, BuildDetail.DropLocation, ReleaseTargetStage)
+
+New Exception("Release build failed")
+
+BuildDetail.BuildServer.TeamProjectCollection.Uri.AbsoluteUri
+C:\Users\300915\AppData\Local\Temp\Microsoft\ReleaseManagement\14.0\Logs
+
+
+http://ahvtfsdv01rmt01.accretivehealth.local:1000/account/releaseManagementService/_apis/releaseManagement/OrchestratorService/
+InitiateRelease?releaseTemplateName=“vNext-DB-Tran-CI“&deploymentPropertyBag=""&api-version=2.0
+
+http://ahvtfsdv01rmt01.accretivehealth.local:1000/account/releaseManagementService/_apis/releaseManagement/OrchestratorService/
+InitiateReleaseFromBuild?releaseTemplateName=“vNext-DB-Tran-CI“&deploymentPropertyBag=""&api-version=2.0
+
+http://ahvtfsdv01rmt01.accretivehealth.local:1000/account/releaseManagementService/_apis/releaseManagement/OrchestratorService/InitiateReleaseFromBuild?teamFoundationServerUrl=http://tfs.ahtoit.net:8080/tfs/RevenueCycleColl&teamProject=RevenueCycle&buildDefinition=vNext-DB-Tran-CI&buildNumber=DB-RM-Tran-R2016.4_20160422.4&targetStageName=RCM-INT
+
+https://social.msdn.microsoft.com/Forums/vstudio/en-US/cfaea644-056d-4aea-b3e3-3f053f0ee2e0/the-tfs-collection-does-not-exist-in-the-release-management-server?forum=tfsbuild
+http://msdn.developer-works.com/article/12179596/ERROR%3A+The+TFS+collection+%3F%3F%3F%3F+does+not+exists+in+InRelease.
+https://blogs.msdn.microsoft.com/visualstudioalm/2014/10/10/trigger-release-from-build-with-release-management-for-visual-studio-2013-update-3/
+

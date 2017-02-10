@@ -1,0 +1,2 @@
+
+icacls "C:\Users\300915\Desktop\VDT" /grant Everyone:R

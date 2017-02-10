@@ -1,0 +1,1 @@
+﻿tf workspaces /owner:<user name> /collection:"http://tfs.ahtoit.net:8080/tfs/RevenueCycleColl" #/updateComputerName:DVDVSPREM47 (old computername)

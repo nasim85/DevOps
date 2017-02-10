@@ -1,0 +1,47 @@
+---Make directory
+	mkdir cookbooks
+---Run a recipe
+	chef-client --local-mode webserver.rb
+	chef-client --local-mode --runlist 'recipe[learn_chef_iis]'
+	chef-client --local-mode --runlist 'recipe[learn_chef_iis::default]'
+---Check web request
+	(Invoke-WebRequest -UseBasicParsing localhost).Content
+
+---Generate cookbook
+	mkdir cookbooks
+	chef generate cookbook cookbooks\learn_chef_iis
+	tree /F /A cookbooks
+---Generate template file
+---The .erb extension simply means that the file can have placeholders
+	chef generate template cookbooks\learn_chef_iis Default.htm
+	chef-client --local-mode --runlist 'recipe[learn_chef_iis]'
+
+---Knife config
+	mkdir .chef
+	cd .chef
+	--Generate knife config
+		Knife.rb
+		-- #{current_dir} is where knofe.rb exists
+	--Get client key from chef account/administration
+		username.pem
+	--Check knife connection
+		knife ssl check
+---Knife upload cookbook
+	knife cookbook upload learn_chef_iis
+---Validate cookbook list
+	knife cookbook list
+---Verify the configuration
+	knife wsman test HOSTNAME --manual-list	
+
+---bootstrap a node
+knife bootstrap windows winrm ADDRESS --winrm-user USER --winrm-password 'PASSWORD' --node-name node1-windows --run-list 'recipe[learn_chef_iis]'
+knife bootstrap windows winrm 'AHVA2APL5COR01.dev.accretivehealth.local' --winrm-user username --winrm-password 'pwd' --node-name AHVA2APL5COR01 --run-list 'recipe[config_test]'
+
+
+
+---get VM details
+	Get-VM -Name "WindowsServer2012R2" | select -ExpandProperty NetworkAdapters | select IPAddresses
+---Configure the firewall to accept remote WinRM connections
+	Get-NetFirewallPortFilter | ?{$_.LocalPort -eq 5985 } | Get-NetFirewallRule | ?{ $_.Direction –eq "Inbound" -and $_.Profile -eq "Public" -and $_.Action –eq "Allow"} | Set-NetFirewallRule -RemoteAddress "Any"
+	
+	
