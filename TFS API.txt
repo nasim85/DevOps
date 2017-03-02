@@ -1,0 +1,8 @@
+https://www.visualstudio.com/en-us/docs/integrate/api/build/definitions
+https://www.upguard.com/articles/the-7-configuration-management-tools-you-need-to-know
+
+http://tfs.ahtoit.net:8080/tfs/RevenueCycleColl/RevenueCycle/_build
+http://tfs.ahtoit.net:8080/tfs/RevenueCycleColl/RevenueCycle/_apis/build/definitions?api-version=2.0
+
+
+http://tfs.ahtoit.net:8080/tfs/RevenueCycleColl/RevenueCycle/_apis/wit/workitems/152863/revisions?$skip=1&$top=10&api-version=1.0
