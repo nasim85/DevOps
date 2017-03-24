@@ -5,6 +5,15 @@
 	chef-client --local-mode --runlist 'recipe[learn_chef_iis]'
 	chef-client --local-mode --runlist 'recipe[xmledit::webconfig]'
 	chef-client --runlist 'recipe[xmledit::webconfig]'
+	chef-client --local-mode --runlist 'recipe[xmledit]'
+	chef-client --runlist 'recipe[xmledit::webconfigSecure]'
+	#chef-client --local-mode --runlist 'recipe[config_test]'
+
+knife winrm 'name:ahv-phsdevweb01' chef-client --winrm-user india\ --winrm-password '' -r 'role[apache]'
+
+C:\opscode\chef\embedded\bin\gem install knife-reporting
+
+
 ---Check web request
 	(Invoke-WebRequest -UseBasicParsing localhost).Content
 
@@ -61,9 +70,27 @@ knife bootstrap windows winrm 'AHVA2APL5COR01.dev.accretivehealth.local' --winrm
 	Knife data bag show datbagName
 	Knife data bag show datbagName dataKeyName
 	knife data bag edit admins datbagName
+knife data bag show RCM_WEB_Secure appSettings --secret-file .\my_secret_key
+knife data bag show RCM_WEB_Secure connectionStrings --secret 'key'
+Knife cookbook upload xmledit
+
+Knife data bag from file RCM_WEB_Secure ./data_bags/appSettings.json --secret-file .\my_secret_key 
+Knife data bag from file RCM_WEB_Secure ./data_bags/appSettings.json --secret ''
+Knife data bag from file RCM_WEB_Secure ./data_bags/connectionStrings.json --secret-file .\my_secret_key 
+Knife data bag from file RCM_WEB_Secure ./data_bags/connectionStrings.json --secret ''
+Knife data bag from file RCM_WEB_Secure ./data_bags/appSettings_QA.json --secret 'RoceHTSbwMMPQ49mzHPHh1u2WUSrLLmzF/tPKzgexrEC8o2hj64vFUZyx5ABlXxP5NOFmqX2Beq/cl4sc8nCb4BS+MoPtYyPiaN1arDB49Gmk2fKLT2iAc0koyM4EVaApquKd3CVdO1evc25MmAVOVztJZm7L6mKkvHKl2TNjKbbpD0BQkHG3r726AfXSr8hWSthk9h5b3bXB+HNdu7bYQ5g8WuGsc04XdtAlGw2ajrOaxixyhOITCCG6cJqQDfQPa4EXR5pMPb/E2iNVVSkwYtf3F4AOApIdcmWVydINo3TrT9YO7eEATXpSwsEDbXH+yDuV5Vmtbcz6V+bpEa2FBSN8XNFulAsWOQYnrrqEv8wBHK2n3sxMzprTamRldRyeJrPuTdVIBIT59F1nC5P3JYJj8Nddik7SUIh7SguKLpITtPdLhDanPuFrSoeCD8pZr0NkCWIY/EnELXQuqkkWamDEH4gChDfluT0gQ7YIPb3vVQefannFPsclc1bsfnHKPjN4QI52skn8KCMFklDApDArXp+VsFoA1zz1majyZPzYwtzftZk0FvhtL71j+mBOjbyRDSCvi7DEhlDcvXcVkNHOACsPznPhhtmed88E/2IkbGAmi1rpIZXOGrC5BaQv1n0cBwi9YKNpL/BQUfLQ6lL+QPIpezMbOibcbH86a4='
+
+
 	
 	knife node run_list set ahv-phsdevweb01 'recipe[xmledit::webconfig]'
 	knife node run_list set $Node "recipe[copy_builds::$ProjectName],recipe[install_build]"
+
+--- Create secret
+	openssl rand -base64 512 | tr -d '\r\n' > encrypted_data_bag_secret
+	openssl rand -base64 512 | tr -d '\r\n' > my_secret_key
+
+--- Add secret key to chef client.rb file 
+	encrypted_data_bag_secret
 
 --- set default text editor 
 	knife[:editor] = '"C:\Program Files (x86)\vim\vim74\gvim.exe"'
