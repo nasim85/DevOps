@@ -9,7 +9,6 @@
 	chef-client --runlist 'recipe[xmledit::webconfigSecure]'
 	#chef-client --local-mode --runlist 'recipe[config_test]'
 
-knife winrm 'name:ahv-phsdevweb01' chef-client --winrm-user india\ --winrm-password '' -r 'role[apache]'
 
 C:\opscode\chef\embedded\bin\gem install knife-reporting
 
@@ -57,8 +56,8 @@ C:\opscode\chef\embedded\bin\gem install knife-reporting
 
 
 ---bootstrap a node
-knife bootstrap -N AHV-PHSDEVWEB01.accretivehealth.local -x India\300915 -P pwd --sudo -r "recipe[xmledit::webconfig]"
-knife bootstrap 10.133.124.110 -x chef -P chef --sudo -r "recipe[xmledit::webconfig]"
+knife winrm 'name:ahv-phsdevweb01' chef-client --winrm-user $MyCredentials.UserName --winrm-password $MyCredentials.GetNetworkCredential().password -r '$runList'
+knife winrm 'name:ahv-phsdevweb01' chef-client --winrm-user india\ --winrm-password '' -r 'role[apache]'
 
 knife bootstrap windows winrm ADDRESS --winrm-user USER --winrm-password 'PASSWORD' --node-name node1-windows --run-list 'recipe[learn_chef_iis]'
 knife bootstrap windows winrm 'AHVA2APL5COR01.dev.accretivehealth.local' --winrm-user username --winrm-password 'pwd' --node-name AHVA2APL5COR01 --run-list 'recipe[config_test]'
